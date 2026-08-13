@@ -11,7 +11,16 @@
 
 ## Как установить скилл
 
-1. Скачай репозиторий: **Code → Download ZIP**.
+1. Для полного пакета с эталонными видео установи Git LFS, затем выполни:
+
+   ```bash
+   git lfs install
+   git clone https://github.com/elianoraMullagalieva/design-montazh-so-vkusom.git
+   cd design-montazh-so-vkusom
+   git lfs pull
+   ```
+
+   ZIP подходит для просмотра кода и файлов без больших видео.
 2. Открой Claude Code.
 3. Перетащи нужную папку скилла в чат или укажи путь к ней.
 4. Напиши: «Установи этот скилл и используй его в работе».
