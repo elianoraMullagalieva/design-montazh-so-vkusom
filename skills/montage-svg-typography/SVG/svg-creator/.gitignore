@@ -1,6 +1,0 @@
-__pycache__/
-*.pyc
-.DS_Store
-node_modules/
-*.skill
-svg_preview.png
