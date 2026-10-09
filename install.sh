@@ -5,6 +5,8 @@
 #   ./install.sh --no-deps     только скопировать скиллы
 #   ./install.sh --deps-only   только зависимости
 #   ./install.sh --dest DIR    своя папка скиллов (по умолчанию ~/.claude/skills)
+#   ./install.sh --onboarding  включить приветствие помощника при первом сообщении (без вопроса)
+#   ./install.sh --no-onboarding  не спрашивать про приветствие
 #
 # Скрипт можно запускать сколько угодно раз: одинаковые скиллы пропускаются,
 # изменённые одноимённые копии уходят в ~/.claude/skills/_backup_<дата>/.
@@ -17,11 +19,14 @@ SRC="$SCRIPT_DIR/skills"
 DEST="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
 DO_SKILLS=1
 DO_DEPS=1
+DO_ONB=ask
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --no-deps)   DO_DEPS=0 ;;
     --deps-only) DO_SKILLS=0 ;;
+    --onboarding)    DO_ONB=1 ;;
+    --no-onboarding) DO_ONB=0 ;;
     --dest)      shift; DEST="${1:?после --dest укажи папку}" ;;
     -h|--help)   sed -n '2,12p' "$0"; exit 0 ;;
     *) echo "Неизвестный параметр: $1 (см. ./install.sh --help)"; exit 2 ;;
@@ -207,6 +212,21 @@ RC=0
 if [ "$DO_SKILLS" = 1 ]; then install_skills; fi
 if [ "$DO_DEPS" = 1 ]; then install_deps; else say ""; say "Зависимости пропущены (--no-deps). Поставить позже: ./install.sh --deps-only"; fi
 if [ "$DO_SKILLS" = 1 ]; then verify || RC=1; fi
+
+# Приветствие помощника при первом сообщении (правка ~/.claude/CLAUDE.md — только с согласия)
+if [ "$DO_SKILLS" = 1 ] && [ -f "$DEST/reels-montazh-pro/scripts/onboarding_hook.py" ]; then
+  if [ "$DO_ONB" = ask ] && [ -t 0 ]; then
+    say ""
+    printf 'Включить приветствие: при первом сообщении помощник расскажет, что умеет (добавит 5 строк в ~/.claude/CLAUDE.md)? [Д/н] '
+    read -r ans || ans=""
+    case "$ans" in [НнNn]*) DO_ONB=0 ;; *) DO_ONB=1 ;; esac
+  fi
+  if [ "$DO_ONB" = 1 ]; then
+    if python3 "$DEST/reels-montazh-pro/scripts/onboarding_hook.py" --onboarding --yes; then ok "Приветствие включено"; else warn "Не удалось включить приветствие — можно позже: python3 $DEST/reels-montazh-pro/scripts/onboarding_hook.py --onboarding"; fi
+  else
+    say "Приветствие можно включить позже: python3 $DEST/reels-montazh-pro/scripts/onboarding_hook.py --onboarding"
+  fi
+fi
 
 if [ "${#WARNINGS[@]}" -gt 0 ]; then
   step "Предупреждения (${#WARNINGS[@]})"

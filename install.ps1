@@ -13,6 +13,8 @@
 [CmdletBinding()]
 param(
     [switch]$NoDeps,
+    [switch]$Onboarding,
+    [switch]$NoOnboarding,
     [switch]$DepsOnly,
     [string]$Dest = ""
 )
@@ -205,6 +207,17 @@ Write-Host "Дизайн и монтаж со вкусом — установк�
 $rc = 0
 if (-not $DepsOnly) { Install-Skills }
 if (-not $NoDeps) { Install-Deps } else { Say ""; Say "Зависимости пропущены (-NoDeps). Поставить позже: .\install.ps1 -DepsOnly" }
+
+# Приветствие помощника при первом сообщении (правка ~/.claude/CLAUDE.md — только с согласия)
+$hook = Join-Path $Dest "reels-montazh-pro\scripts\onboarding_hook.py"
+if ((Test-Path $hook) -and -not $NoOnboarding) {
+    $doOnb = $Onboarding.IsPresent
+    if (-not $doOnb) {
+        $ans = Read-Host "Включить приветствие: при первом сообщении помощник расскажет, что умеет (5 строк в ~/.claude/CLAUDE.md)? [Д/н]"
+        $doOnb = -not ($ans -match '^[НнNn]')
+    }
+    if ($doOnb) { & python $hook --onboarding --yes; if ($LASTEXITCODE -eq 0) { Say "[OK] Приветствие включено" } else { Say "[ВНИМАНИЕ] Не удалось включить приветствие: python $hook --onboarding" } }
+}
 if (-not $DepsOnly) { if ((Test-Install) -ne 0) { $rc = 1 } }
 
 if ($Warnings.Count -gt 0) {
