@@ -23,17 +23,30 @@ import json
 import shutil
 from pathlib import Path
 
-STATE_FILE = "/home/claude/.svg_loop_state.json"
-PREVIEW_PNG = "/home/claude/svg_preview.png"
-OUTPUT_DIR = "/mnt/user-data/outputs"
+import tempfile
+
+# Рабочая папка (состояние цикла + превью). Переопределяется переменной SVG_LOOP_DIR.
+WORK_DIR = os.environ.get("SVG_LOOP_DIR") or os.path.join(tempfile.gettempdir(), "svg_loop")
+os.makedirs(WORK_DIR, exist_ok=True)
+STATE_FILE = os.path.join(WORK_DIR, ".svg_loop_state.json")
+PREVIEW_PNG = os.path.join(WORK_DIR, "svg_preview.png")
+# Куда кладётся готовый результат. По умолчанию ./svg-output в текущей папке; переопределяется SVG_LOOP_OUT.
+OUTPUT_DIR = os.environ.get("SVG_LOOP_OUT") or os.path.join(os.getcwd(), "svg-output")
 
 def ensure_cairosvg():
     try:
         import cairosvg
         return cairosvg
     except ImportError:
-        os.system(f"{sys.executable} -m pip install cairosvg --break-system-packages -q")
-        import cairosvg
+        print("cairosvg не установлен — пробую поставить: python3 -m pip install --user cairosvg")
+        if os.system(f'"{sys.executable}" -m pip install --user -q cairosvg') != 0:
+            os.system(f'"{sys.executable}" -m pip install --user -q --break-system-packages cairosvg')
+        try:
+            import cairosvg
+        except Exception as e:  # ImportError или OSError, если нет системной библиотеки cairo
+            print("Не удалось загрузить cairosvg:", e)
+            print("macOS: brew install cairo | Ubuntu/Debian: sudo apt install libcairo2 | Windows: установи GTK3 runtime")
+            sys.exit(2)
         return cairosvg
 
 def load_state():

@@ -2,10 +2,9 @@
 
 ## Файлы
 
-- HTML: `/Users/elianora/Desktop/Контент/08022к-experimental-typography/index.html`
-- Видео: `/Users/elianora/Desktop/Контент/08022к-experimental-typography/video.mp4`
-- Пословные таймкоды: `/Users/elianora/Desktop/Контент/08022к-experimental-typography-word-timestamps.json`
-- Figma: `https://www.figma.com/design/0AAR1u2bwo6vHOeCAlbRUc/Untitled?node-id=0-1`
+- HTML, видео и пословные таймкоды эталона хранятся в рабочей папке автора и в репозиторий не входят.
+- Для нового ролика держи HTML, исходное видео и JSON с пословными таймкодами Whisper в папке своего проекта и указывай к ним относительные пути.
+- Шрифты эталона: HeadingNow Var и Denistina в комплект не входят — установи их сам, проверив лицензию, или замени на близкие по характеру; Onest — бесплатный OFL (Google Fonts).
 
 ## Утверждённые композиционные примеры
 

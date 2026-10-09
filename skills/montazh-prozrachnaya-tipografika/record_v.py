@@ -15,7 +15,7 @@ async def record(html, out, duration_ms):
             record_video_dir=str(out_dir), record_video_size={"width":1080,"height":1920},
         )
         pg = await ctx.new_page()
-        await pg.goto(f"file://{Path(html).resolve()}?qa=1")
+        await pg.goto(Path(html).resolve().as_uri() + "?qa=1")
         await pg.wait_for_load_state("domcontentloaded")
         await pg.add_style_tag(content=".panel{display:none!important}")
         await pg.wait_for_timeout(250)

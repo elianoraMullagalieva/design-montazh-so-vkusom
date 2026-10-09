@@ -15,7 +15,7 @@ async def main(html, out, duration, fps=25):
         b = await p.chromium.launch()
         ctx = await b.new_context(viewport={"width":1080,"height":1920}, device_scale_factor=1)
         pg = await ctx.new_page()
-        await pg.goto(f"file://{Path(html).resolve()}?qa=1")
+        await pg.goto(Path(html).resolve().as_uri() + "?qa=1")
         await pg.wait_for_load_state("domcontentloaded")
         await pg.add_style_tag(content="""
           html,body{background:transparent!important;}

@@ -19,7 +19,7 @@ WRITE SVG → RENDER → VIEW PNG → ASSESS → FIX → RENDER → VIEW → ...
 
 **1. Write SVG to a working file:**
 ```bash
-cat > /home/claude/draft.svg << 'SVGEOF'
+cat > draft.svg << 'SVGEOF'
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
   ...
 </svg>
@@ -28,12 +28,12 @@ SVGEOF
 
 **2. Render it (MANDATORY — the script tracks this):**
 ```bash
-python3 /path/to/skill/scripts/svg_loop.py render /home/claude/draft.svg
+python3 ~/.claude/skills/svg-creator/scripts/svg_loop.py render draft.svg
 ```
-This creates `/home/claude/svg_preview.png`.
+This creates `svg_preview.png` in the loop work dir (system temp folder `svg_loop/`, or `$SVG_LOOP_DIR`); the script prints the exact path.
 
 **3. View the rendered PNG (MANDATORY — you must actually look):**
-Use the `view` tool on `/home/claude/svg_preview.png`. Study what you see.
+Open the PNG path printed by the script with your image-viewing tool (in Claude Code — the Read tool). Study what you see.
 
 **4. Assess the result. Ask yourself:**
 - Are elements positioned correctly?
@@ -43,15 +43,15 @@ Use the `view` tool on `/home/claude/svg_preview.png`. Study what you see.
 - For characters: are body parts connected naturally?
 
 **5. If anything is wrong, fix the SVG and go back to step 2.**
-Edit `/home/claude/draft.svg` with str_replace or rewrite, then render and view again.
+Edit `draft.svg` with str_replace or rewrite, then render and view again.
 
 **6. When it looks good, deliver:**
 ```bash
-python3 /path/to/skill/scripts/svg_loop.py finish /home/claude/draft.svg output-name.svg
+python3 ~/.claude/skills/svg-creator/scripts/svg_loop.py finish draft.svg output-name.svg
 ```
-This copies the SVG + preview PNG to `/mnt/user-data/outputs/`. The script REFUSES to deliver if you never rendered.
+This copies the SVG + preview PNG to `./svg-output/` (or `$SVG_LOOP_OUT`). The script REFUSES to deliver if you never rendered.
 
-Then use `present_files` to share the output SVG with the user.
+Then tell the user where the output SVG is (or share it with whatever file tool your environment has).
 
 ### Iteration Guidelines
 - **Simple icons, logos, patterns:** 1-2 iterations usually enough
@@ -61,10 +61,10 @@ Then use `present_files` to share the output SVG with the user.
 
 ### Script Commands Reference
 ```bash
-python3 scripts/svg_loop.py render <file.svg>   # Render + view cycle
-python3 scripts/svg_loop.py finish <file.svg> [name.svg]  # Deliver (blocks if no render)
-python3 scripts/svg_loop.py status               # Check iteration count
-python3 scripts/svg_loop.py reset                # Start fresh
+python3 ~/.claude/skills/svg-creator/scripts/svg_loop.py render <file.svg>   # Render + view cycle
+python3 ~/.claude/skills/svg-creator/scripts/svg_loop.py finish <file.svg> [name.svg]  # Deliver (blocks if no render)
+python3 ~/.claude/skills/svg-creator/scripts/svg_loop.py status               # Check iteration count
+python3 ~/.claude/skills/svg-creator/scripts/svg_loop.py reset                # Start fresh
 ```
 
 ---
