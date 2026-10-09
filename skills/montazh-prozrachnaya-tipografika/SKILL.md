@@ -147,3 +147,6 @@ Screen-наложение оказалось капризным (лагало в
 - Эталон: `etalon/ЭТАЛОН-bebas-gogol-orange.html` (у автора были версии v1 Bebas/красный и v2 Manrope строчн/лайм).
 - Шрифты: `fonts/` в папке этого скилла (BebasNeueCyrillic.ttf, Gogol-Regular.otf, Manrope-*, JetBrainsMono-Regular.ttf). Manrope и JetBrains Mono — OFL-1.1 (лицензии рядом); права на Bebas Neue Cyrillic и Gogol для коммерческого проекта проверь отдельно.
 - Скрипты рядом с SKILL.md: `record_v.py` (mp4 на чёрном фоне), `record_alpha2.py` (прозрачный ProRes 4444), `shotn.py` (контактный лист сцен без рендера: `python3 shotn.py --html X.html 0 2.5 5`).
+
+
+> **Шрифты Bebas Neue Cyrillic и Gogol не входят в комплект** (лицензия не подтверждена) — см. `fonts/СКАЧАТЬ_BEBAS_И_GOGOL.md`. Без них работает с запасным Manrope.
